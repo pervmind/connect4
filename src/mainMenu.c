@@ -1,5 +1,7 @@
 #include<stdio.h>
-int main()
+#include "../headers/config.h"
+
+int mainMenu(struct config config)
 {
     double pth;
     double md = 0;

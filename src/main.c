@@ -5,7 +5,7 @@
 int main()
 {
 	struct config config = getConfig();
-	mainMenu();
+	mainMenu(config);
 
 	return 0;
 }
