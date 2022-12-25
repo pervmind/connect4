@@ -134,10 +134,12 @@
     <ClCompile Include="src\mainMenu.c">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
+    <ClCompile Include="src\newGame.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\config.h" />
     <ClInclude Include="headers\mainMenu.h" />
+    <ClInclude Include="headers\newGame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
