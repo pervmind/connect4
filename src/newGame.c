@@ -4,7 +4,29 @@
 #include <time.h>
 #include "../headers/config.h"
 #include "../headers/newGame.h"
+void Color(char color) {
+    switch (color)
+    {
+    case'R':
+        printf("%s", KRED);
+        break;
+    case'Y':
+        printf("%s", KYEL);
+        break;
+    case'B':
+        printf("%s", KBLU);
+        break;
+    case'G':
+        printf("%s", KGRN);
+        break;
+    case'W':
+        printf("%s", KWHT);
+        break;
+    default:
+        break;
 
+    }
+}
 int validGameMode() {
     char input[256];
     printf("\nSelect The MODE's Number : \n");
@@ -33,7 +55,7 @@ void initiateGame(struct cell grid[100][100], int height, int width) {
 }
 
 void printGrid(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, time_t initialTime){
-    printf("Player1(score: %d, moves: %d)\nPlayer2(score: %d, moves: %d)\n", player1.score, player1.moves, player2.score, player2.moves);
+    printf("\nPlayer1(score: %d, moves: %d)\nPlayer2(score: %d, moves: %d)\n", player1.score, player1.moves, player2.score, player2.moves);
     time_t currentTime;
     time(&currentTime);
     long int timer = currentTime - initialTime;
@@ -62,7 +84,7 @@ void player1move(struct cell grid[100][100], int height, int width, struct playe
 }
 
 void newGame(struct config config) {
-    char game_colors[] = { 'R','O','Y','G' }; //all colors possible for players' disks
+    char game_colors[] = { 'R','B','Y','G' }; //all colors possible for players' disks
     
     printf("\n***************\n");
     printf("\nPlease Select GAME MODE :");
@@ -73,7 +95,10 @@ void newGame(struct config config) {
     time_t t;
     srand((unsigned)time(&t)); // generating random numbers using time
     C1 = rand() % 4; //generating random in range 0 >> 4
-    printf("Player 1 has %c color", game_colors[C1]);
+    printf("Player 1 has "); 
+    Color(game_colors[C1]); //printing color
+    printf("%c Color", game_colors[C1]);
+    Color('W'); //reseting color
     if (md == 2) // check for mode 2
     {
         while (1)
@@ -82,10 +107,13 @@ void newGame(struct config config) {
             if (C1 != C2) // check that every player has his independent color
                 break;
         }
-        printf("\nPlayer 2 has %c color\n", game_colors[C2]);
+        printf("\nPlayer 2 has ");
+        Color(game_colors[C2]); //printing color
+        printf("%c Color", game_colors[C2]);
+        Color('W'); //reseting color
     }
-    struct player player1 = { .no = 1, .moves = 0, .symbol = 'X', .score = 0 }; // <--- add color here
-    struct player player2 = { .no = 2, .moves = 0, .symbol = 'O', .score = 0 }; // <--- add color here
+    struct player player1 = { .no = 1, .moves = 0, .symbol = 'X', .score = 0 , .color = game_colors[C1]}; // <---  i added color here
+    struct player player2 = { .no = 2, .moves = 0, .symbol = 'O', .score = 0 , .color = game_colors[C2]}; // <---  i added color here
     int height = config.hieght;
     int width = config.width;
     struct cell grid[100][100];
