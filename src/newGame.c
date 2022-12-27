@@ -80,7 +80,7 @@ void printGrid(struct cell grid[100][100], int height, int width, struct player 
 }
 
 void player1move(struct cell grid[100][100], int height, int width, struct player player1) {
-    printf("Player 1's turn.. Enter column number!: ")
+    printf("Player 1's turn.. Enter column number!: ");
 }
 
 void newGame(struct config config) {
