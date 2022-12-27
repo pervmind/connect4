@@ -99,14 +99,15 @@ void newGame(struct config config) {
     Color(game_colors[C1]); //printing color
     printf("%c Color", game_colors[C1]);
     Color('W'); //reseting color
+
+    while (1)
+    {
+        C2 = rand() % 4; //generating random in range 0 >> 4
+        if (C1 != C2) // check that every player has his independent color
+            break;
+    }
     if (md == 2) // check for mode 2
     {
-        while (1)
-        {
-            C2 = rand() % 4; //generating random in range 0 >> 4
-            if (C1 != C2) // check that every player has his independent color
-                break;
-        }
         printf("\nPlayer 2 has ");
         Color(game_colors[C2]); //printing color
         printf("%c Color", game_colors[C2]);
