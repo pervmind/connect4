@@ -89,5 +89,4 @@ void newGame(struct config config) {
     time(&initialTime);
     initiateGame(grid, height, width);
     printGrid(grid, height, width, player1, player2, initialTime);
-    player1Move(grid, height, width);
 }
