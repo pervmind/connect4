@@ -14,8 +14,6 @@ int validMode() {
         return validMode();
     }
     else return output;
-    
-
 }
 
 void mainMenu(struct config config)
@@ -35,10 +33,10 @@ void mainMenu(struct config config)
         newGame(config);
         break;
     case (2):
-          printf("check2"); // <<<<<<<<<< we need save file here to load a previous game
-          break;
+        printf("check2"); // <<<<<<<<<< we need save file here to load a previous game
+        break;
      case (3):
-          printf("check3"); // <<<<<<<<<< we need save file here to view highscores
-          break;
+        printf("check3"); // <<<<<<<<<< we need save file here to view highscores
+        break;
     }
 }

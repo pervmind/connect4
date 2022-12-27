@@ -57,6 +57,10 @@ void printGrid(struct cell grid[100][100], int height, int width, struct player 
     }
 }
 
+void player1move(struct cell grid[100][100], int height, int width, struct player player1) {
+    printf("Player 1's turn.. Enter column number!: ")
+}
+
 void newGame(struct config config) {
     char game_colors[] = { 'R','O','Y','G' }; //all colors possible for players' disks
     
@@ -89,4 +93,5 @@ void newGame(struct config config) {
     time(&initialTime);
     initiateGame(grid, height, width);
     printGrid(grid, height, width, player1, player2, initialTime);
+
 }
