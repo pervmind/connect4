@@ -25,10 +25,60 @@ void Color(char color) {
     case'W':
         printf("%s", KWHT);
         break;
+    case'M':
+        printf("%s", KMAG);
+        break;
     default:
         break;
 
     }
+}
+int ScoreCalc(struct player player,struct move move, char grid[100][100], int hight, int width, int colsVolume[100]){
+    //row scorecheck
+    int count = 0;
+    for (int i = move.columnNo - 3; i <= move.columnNo + 3; i++){
+        if (grid[hight - colsVolume[move.columnNo] - 1][i] == player.symbol)
+            count++;
+        else
+            count = 0;
+        if (count - 3 > 0)
+            player.score += count - 3;
+    }
+    //column scorecheck
+    count = 0;
+    for (int i = hight - colsVolume[move.columnNo] - 1 - 3; i <= hight - colsVolume[move.columnNo] - 1 + 3; i++) {
+        if (grid[i][move.columnNo] == player.symbol)
+            count++;
+        else
+            count = 0;
+        if (count - 3 > 0)
+            player.score += count - 3;
+    }
+    //first diagonal scorecheck '/'
+    count = 0;
+    int j = hight - colsVolume[move.columnNo] - 1 + 3;
+    for (int i = move.columnNo - 3; i <= move.columnNo + 3; i++){
+        if (grid[j][i] == player.symbol)
+            count++;
+        else
+            count = 0;
+        if (count - 3 > 0)
+            player.score += count - 3;
+        j--;
+    }
+    //second diagonal scorecheck'\'
+    count = 0;
+    for (int i = move.columnNo - 3; i <= move.columnNo + 3; i++) {
+        if (grid[j][i] == player.symbol)
+            count++;
+        else
+            count = 0;
+        if (count - 3 > 0)
+            player.score += count - 3;
+        j++;
+    }
+    return player.score;
+}
 }
 
 void coloredChar(char color, char character ) {
@@ -71,7 +121,9 @@ void printGrid(struct cell grid[100][100], int height, int width, struct player 
     long int timer = currentTime - initialTime;
     int seconds = timer % 60;
     int minutes = timer / 60;
+    Color('M');
     printf("Time: %d:%d\n", minutes, seconds);
+    Color('W');
     for (int i = 0; i < height; i++) {
         printf("|");
         for (int j = 0; j < width; j++) {
