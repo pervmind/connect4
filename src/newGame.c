@@ -41,8 +41,8 @@ int validGameMode() {
     }
 }
 
-void initiateGame(struct cell grid[100][100], int height, int width) {
-    int colsVolume[100];
+void initiateGame(struct cell grid[100][100], int height, int width, int colsVolume[100]) {
+    
     for (int i = 0; i < width; i++) {
         colsVolume[i] = 0;
     }
@@ -120,7 +120,8 @@ void newGame(struct config config) {
     struct cell grid[100][100];
     time_t initialTime;
     time(&initialTime);
-    initiateGame(grid, height, width);
+    int colsVolume[100];
+    initiateGame(grid, height, width, colsVolume);
     printGrid(grid, height, width, player1, player2, initialTime);
 
 }
