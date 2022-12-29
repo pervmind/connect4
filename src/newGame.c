@@ -202,7 +202,8 @@ void player1move(struct cell grid[100][100], int height, int width, struct playe
             grid[height - colsVolume[input] - 1][input].value = player1.symbol;
             grid[height - colsVolume[input] - 1][input].color = player1.color;
             colsVolume[input]++;
-            // calculate score
+            if(player1.moves >= 4)
+            ScoreCalc(player1, moves, grid, movesIndex, height, width, colsVolume);
 
         }
     }
@@ -228,8 +229,9 @@ void player2move(struct cell grid[100][100], int height, int width, struct playe
             grid[height - colsVolume[input] - 1][input].value = player2.symbol;
             grid[height - colsVolume[input] - 1][input].color = player2.color;
             colsVolume[input]++;
-            // calculate score
-            
+            if (player1.moves >= 4)
+            ScoreCalc(player2, moves, grid, movesIndex, height, width, colsVolume);
+
         }
     }
 
