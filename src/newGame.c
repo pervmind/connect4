@@ -45,54 +45,39 @@ int endVal(int end , int limit) {
     else
         return limit;
 }
-void ScoreCalc(struct player player,struct move move[10000], char grid[100][100],int index, int hight, int width, int colsVolume[100]) {
+int ScoreCalc(struct player player,struct move move[10000], struct cell grid[100][100],int index, int hight, int width, int colsVolume[100]) {
+    int NewScore = player.score;
     //row scorecheck
     int count = 0;
-    int start = move[index].columnNo - 3;
-    int end   = move[index].columnNo + 3;
+    int start = move[index].columnNo - 3 ;
+    int end   = move[index].columnNo + 3 ;
     start = startVal(start);
     end = endVal(end, width);
-    for (int i = start;i <= end ; i++) {
-        if (grid[hight - colsVolume[move[index].columnNo] - 1][i] == player.symbol)
+    int vol = colsVolume[move[index].columnNo];
+    for (int i = start; i <= end; i++) {
+        if (grid[hight - vol][i].value == player.symbol)
             count++;
         else
             count = 0;
-        if (count - 3 > 0)
-            player.score += count - 3;
+        if (count >= 4)
+            NewScore++;
     }
-    //column scorecheck
+    //col scorecheck
     count = 0;
-    for (int i = hight - colsVolume[move[index].columnNo] - 1 - 3; i <= hight - colsVolume[move[index].columnNo] - 1 + 3; i++) {
-        if (grid[i][move[index].columnNo] == player.symbol)
-            count++;
-        else
-            count = 0;
-        if (count - 3 > 0)
-            player.score += count - 3;
+    start = hight - colsVolume[move[index].columnNo] - 3;
+    end   = hight - colsVolume[move[index].columnNo] + 3;
+    start = startVal(start);
+    end = endVal(end, hight);
+    for (int i = start; i <= end; i++) {
+         if (grid[i][move[index].columnNo].value == player.symbol)
+             count++;
+         else
+             count = 0;
+         if (count >= 4)
+             NewScore++;
     }
-    //first diagonal scorecheck '/'
-    count = 0;
-    int j = hight - colsVolume[move[index].columnNo] - 1 + 3;
-    for (int i = move[index].columnNo - 3; i <= move[index].columnNo + 3; i++) {
-        if (grid[j][i] == player.symbol)
-            count++;
-        else
-            count = 0;
-        if (count - 3 > 0)
-            player.score += count - 3;
-        j--;
-    }
-    //second diagonal scorecheck'\'
-    count = 0;
-    for (int i = move[index].columnNo - 3; i <= move[index].columnNo + 3; i++) {
-        if (grid[j][i] == player.symbol)
-            count++;
-        else
-            count = 0;
-        if (count - 3 > 0)
-            player.score += count - 3;
-        j++;
-    }
+    
+    return NewScore;
 }
 
 
@@ -202,8 +187,6 @@ void player1move(struct cell grid[100][100], int height, int width, struct playe
             grid[height - colsVolume[input] - 1][input].value = player1.symbol;
             grid[height - colsVolume[input] - 1][input].color = player1.color;
             colsVolume[input]++;
-            if(player1.moves >= 4)
-            ScoreCalc(player1, moves, grid, movesIndex, height, width, colsVolume);
 
         }
     }
@@ -229,7 +212,6 @@ void player2move(struct cell grid[100][100], int height, int width, struct playe
             grid[height - colsVolume[input] - 1][input].value = player2.symbol;
             grid[height - colsVolume[input] - 1][input].color = player2.color;
             colsVolume[input]++;
-            if (player1.moves >= 4)
             ScoreCalc(player2, moves, grid, movesIndex, height, width, colsVolume);
 
         }
@@ -284,12 +266,18 @@ void newGame(struct config config) {
     while (gameEnd) {
         if (plays % 2 == 0) {
             player1move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
+            player1.moves++;
+            if (player1.moves >= 4)
+            player1.score = ScoreCalc(player1, moves, grid, movesIndex, height, width, colsVolume);
             printGrid(grid, height, width, player1, player2, initialTime);
             plays++;
             // check for game end
         }
         else {
             player2move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
+            player2.moves++;
+            if(player2.moves >= 4)
+            player2.score = ScoreCalc(player2, moves, grid, movesIndex, height, width, colsVolume);
             printGrid(grid, height, width, player1, player2, initialTime);
             plays++;
             // check for game end
