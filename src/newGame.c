@@ -79,7 +79,7 @@ int ScoreCalc(struct player player,struct move move, char grid[100][100], int hi
     }
     return player.score;
 }
-}
+
 
 void coloredChar(char color, char character ) {
     Color(color); //printing color
