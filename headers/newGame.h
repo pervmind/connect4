@@ -8,6 +8,7 @@
 struct cell {
 	char player;
 	char value;
+	char color;
 };
 
 struct player {
