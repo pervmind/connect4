@@ -76,7 +76,36 @@ int ScoreCalc(struct player player,struct move move[10000], struct cell grid[100
          if (count >= 4)
              NewScore++;
     }
-    
+    //first diagonalcheck '/'
+    int colstart = move[index].columnNo - 3;
+    int rowstart = hight - colsVolume[move[index].columnNo] + 3;
+    int colend   = move[index].columnNo + 3;
+    int rowend   = hight - colsVolume[move[index].columnNo] - 3;
+    int j = rowstart;
+    for (int i = colstart; i <= colend; i++) {
+        if (grid[j][i].value == player.symbol)
+            count++;
+        else
+            count = 0;
+        if (count >= 4)
+            NewScore++;
+        j--;
+    }
+    //second diagonalcheck '\'
+     colstart = move[index].columnNo - 3;
+     rowstart = hight - colsVolume[move[index].columnNo] - 3;
+     colend = move[index].columnNo + 3;
+     rowend = hight - colsVolume[move[index].columnNo] + 3;
+     j = rowstart;
+    for (int i = colstart; i <= colend; i++) {
+        if (grid[j][i].value == player.symbol)
+            count++;
+        else
+            count = 0;
+        if (count >= 4)
+            NewScore++;
+        j++;
+    }
     return NewScore;
 }
 
