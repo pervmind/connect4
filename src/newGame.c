@@ -174,5 +174,4 @@ void newGame(struct config config) {
     int colsVolume[100];
     initiateGame(grid, height, width, colsVolume);
     printGrid(grid, height, width, player1, player2, initialTime);
-
 }
