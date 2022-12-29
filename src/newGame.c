@@ -304,7 +304,7 @@ void newGame(struct config config) {
             if (player1.moves + player2.moves == height * width) {
                 if (player1.score != player2.score) {
                     printf("\n********************");
-                    Printf("\nTHE GMAE HAS ENDED\n");
+                    printf("\nTHE GMAE HAS ENDED\n");
                     printf("The Winner is player ");
                     if (player1.score > player2.score)
                         printf("1\n");
@@ -313,7 +313,7 @@ void newGame(struct config config) {
                 }
                 else
                     printf("The Game Ended With A Tie");
-
+                
             }
 
         }
@@ -328,7 +328,7 @@ void newGame(struct config config) {
             if (player1.moves + player2.moves == height * width) {
                 if (player1.score != player2.score) {
                     printf("\n********************");
-                    Printf("\nTHE GMAE HAS ENDED\n");
+                    printf("\nTHE GMAE HAS ENDED\n");
                     printf("The Winner is player ");
                     if (player1.score > player2.score)
                         printf("1\n");
@@ -337,10 +337,8 @@ void newGame(struct config config) {
                 }
                 else
                     printf("The Game Ended With A Tie");
-
+            
             }
         }
 
     }
-    
-}
