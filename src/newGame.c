@@ -27,6 +27,23 @@ void Color(char color) {
 
     }
 }
+void scoreCalc(struct cell)
+{
+    int rowCheck()
+    {
+
+    }
+    int colCheck()
+    {
+
+    }
+    int diagCheck()
+    {
+
+    }
+    int newScore = 0;
+    
+}
 int validGameMode() {
     char input[256];
     printf("\nSelect The MODE's Number : \n");
