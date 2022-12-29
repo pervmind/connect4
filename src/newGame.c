@@ -4,6 +4,9 @@
 #include <time.h>
 #include "../headers/config.h"
 #include "../headers/newGame.h"
+
+
+
 void Color(char color) {
     switch (color)
     {
@@ -27,6 +30,13 @@ void Color(char color) {
 
     }
 }
+
+void coloredChar(char color, char character ) {
+    Color(color); //printing color
+    printf("%c", character);
+    Color('W'); //reseting color
+}
+
 int validGameMode() {
     char input[256];
     printf("\nSelect The MODE's Number : \n");
@@ -65,7 +75,14 @@ void printGrid(struct cell grid[100][100], int height, int width, struct player 
     for (int i = 0; i < height; i++) {
         printf("|");
         for (int j = 0; j < width; j++) {
-            printf("%c|", grid[i][j].value);
+            if (grid[i][j].player == 0) {
+                printf("%c|", grid[i][j].value);
+            }
+            else {
+                
+                coloredChar(grid[i][j].color, grid[i][j].value);
+                printf("|");
+            }
         }
         printf("\n");
         for (int k = 0; k < 2 * width; k++) {
@@ -75,17 +92,85 @@ void printGrid(struct cell grid[100][100], int height, int width, struct player 
     }
     printf(" ");
     for (int i = 0; i < width; i++) {
-        printf("%d ", i);
+        printf("%d ", i+1);
     }
 }
+int validateMove(int width) {
+    printf("Enter a column number (type q to save and exit): ");
+    char str[100];
+    fgets(str, 99, stdin);
+    int input = atoi(str);
+    if (input >= 1 && input <= width) {
+        return input-1;
+    }
+    else {
+        if (str[0] == 'q') {
+            return -1;
+        }
+        else {
+            printf("invalid input!!\n");
+            return validateMove(width);
+        }
+    }
+    
+}
 
-void player1move(struct cell grid[100][100], int height, int width, struct player player1) {
-    printf("Player 1's turn.. Enter column number!: ");
+void player1move(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex) {
+    printf("\nPlayer 1's turn..\n");
+    int input = validateMove(width);
+    if (input == -1) {
+        printf("save game\n");
+    }
+    else {
+        if (colsVolume[input] >= height) {
+            printf("Column is full .. please choose another column\n");
+            player1move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
+        }
+        else {
+            moves[movesIndex].columnNo = input;
+            moves[movesIndex].playerNo = 1;
+            moves[movesIndex].postScore = player1.score;
+            movesIndex++;
+            grid[height - colsVolume[input] - 1][input].player = 1;
+            grid[height - colsVolume[input] - 1][input].value = player1.symbol;
+            grid[height - colsVolume[input] - 1][input].color = player1.color;
+            colsVolume[input]++;
+            // calculate score
+
+        }
+    }
+    
+}
+
+void player2move(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex) {
+    printf("\nPlayer 2's turn..\n");
+    int input = validateMove(width);
+    if (input == -1) {
+        printf("save game\n");
+    }
+    else {
+        if (colsVolume[input] >= height) {
+            printf("Column is full .. please choose another column\n");
+            player2move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
+        }
+        else {
+            moves[movesIndex].columnNo = input;
+            moves[movesIndex].playerNo = 2;
+            moves[movesIndex].postScore = player2.score;
+            grid[height - colsVolume[input] - 1][input].player = 2;
+            grid[height - colsVolume[input] - 1][input].value = player2.symbol;
+            grid[height - colsVolume[input] - 1][input].color = player2.color;
+            colsVolume[input]++;
+            // calculate score
+            
+        }
+    }
+
 }
 
 void newGame(struct config config) {
-    char game_colors[] = { 'R','B','Y','G' }; //all colors possible for players' disks
     
+    char game_colors[] = { 'R','B','Y','G' }; //all colors possible for players' disks
     printf("\n***************\n");
     printf("\nPlease Select GAME MODE :");
     printf("\n1 : Player 1 V.S PC");
@@ -121,7 +206,26 @@ void newGame(struct config config) {
     time_t initialTime;
     time(&initialTime);
     int colsVolume[100];
+    struct move moves[10000];
+    int movesIndex = 0;
     initiateGame(grid, height, width, colsVolume);
     printGrid(grid, height, width, player1, player2, initialTime);
+    int plays = 0;
+    int gameEnd = 1;
+    while (gameEnd) {
+        if (plays % 2 == 0) {
+            player1move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
+            printGrid(grid, height, width, player1, player2, initialTime);
+            plays++;
+            // check for game end
+        }
+        else {
+            player2move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
+            printGrid(grid, height, width, player1, player2, initialTime);
+            plays++;
+            // check for game end
+        }
 
+    }
+    
 }
