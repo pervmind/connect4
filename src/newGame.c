@@ -301,6 +301,21 @@ void newGame(struct config config) {
             printGrid(grid, height, width, player1, player2, initialTime);
             plays++;
             // check for game end
+            if (player1.moves + player2.moves == height * width) {
+                if (player1.score != player2.score) {
+                    printf("\n********************");
+                    Printf("\nTHE GMAE HAS ENDED\n");
+                    printf("The Winner is player ");
+                    if (player1.score > player2.score)
+                        printf("1\n");
+                    else
+                        printf("2\n");
+                }
+                else
+                    printf("The Game Ended With A Tie");
+
+            }
+
         }
         else {
             player2move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
@@ -310,6 +325,20 @@ void newGame(struct config config) {
             printGrid(grid, height, width, player1, player2, initialTime);
             plays++;
             // check for game end
+            if (player1.moves + player2.moves == height * width) {
+                if (player1.score != player2.score) {
+                    printf("\n********************");
+                    Printf("\nTHE GMAE HAS ENDED\n");
+                    printf("The Winner is player ");
+                    if (player1.score > player2.score)
+                        printf("1\n");
+                    else
+                        printf("2\n");
+                }
+                else
+                    printf("The Game Ended With A Tie");
+
+            }
         }
 
     }
