@@ -17,4 +17,10 @@ struct player {
 	char color;
 };
 
+struct move {
+	char playerNo;
+	int postScore;
+	int columnNo;
+};
+
 void newGame();
