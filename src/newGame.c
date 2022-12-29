@@ -33,10 +33,26 @@ void Color(char color) {
 
     }
 }
+int startVal(int start) {
+    if (start > 0)
+        return start;
+    else
+        return 0;
+}
+int endVal(int end , int limit) {
+    if (end < limit)
+        return end;
+    else
+        return limit;
+}
 void ScoreCalc(struct player player,struct move move[10000], char grid[100][100],int index, int hight, int width, int colsVolume[100]) {
     //row scorecheck
     int count = 0;
-    for (int i = move[index].columnNo - 3; i <= move[index].columnNo + 3; i++) {
+    int start = move[index].columnNo - 3;
+    int end   = move[index].columnNo + 3;
+    start = startVal(start);
+    end = endVal(end, width);
+    for (int i = start;i <= end ; i++) {
         if (grid[hight - colsVolume[move[index].columnNo] - 1][i] == player.symbol)
             count++;
         else
