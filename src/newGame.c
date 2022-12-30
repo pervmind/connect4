@@ -259,6 +259,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             if (plays % 2 == 0) {
                 moves[movesIndex].playerNo = 1;
                 moves[movesIndex].postScore = player1.score;
+                moves[movesIndex].columnNo = input;
                 printf("\n %d\n", moves[movesIndex].columnNo);
                 movesIndex++;
                 grid[height - colsVolume[input] - 1][input].player = 1;
@@ -273,6 +274,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             else {
                 moves[movesIndex].playerNo = 2;
                 moves[movesIndex].postScore = player2.score;
+                moves[movesIndex].columnNo = input;
                 printf("\n %d\n", moves[movesIndex].columnNo);
                 movesIndex++;
                 grid[height - colsVolume[input] - 1][input].player = 2;
