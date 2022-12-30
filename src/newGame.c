@@ -166,8 +166,13 @@ int validateMove(int width) {
     
 }
 
-void player1move(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex) {
-    printf("\nPlayer 1's turn..\n");
+void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex, time_t initialTime, int plays){
+    if (plays % 2 == 0) {
+        printf("\nPlayer 1's turn..\n");
+    }
+    else {
+        printf("\nPlayer 2's turn..\n");
+    }
     int input = validateMove(width);
     if (input == -1) {
         printf("save game\n");
@@ -175,26 +180,48 @@ void player1move(struct cell grid[100][100], int height, int width, struct playe
     else {
         if (colsVolume[input] >= height) {
             printf("Column is full .. please choose another column\n");
-            player1move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
         }
         else {
             moves[movesIndex].columnNo = input;
-            moves[movesIndex].playerNo = 1;
-            moves[movesIndex].postScore = player1.score;
-            movesIndex++;
-            grid[height - colsVolume[input] - 1][input].player = 1;
-            grid[height - colsVolume[input] - 1][input].value = player1.symbol;
-            grid[height - colsVolume[input] - 1][input].color = player1.color;
-            colsVolume[input]++;
-            if(player1.moves >= 4)
-            ScoreCalc(player1, moves, grid, movesIndex, height, width, colsVolume);
-
+            if (plays % 2 == 0) {
+                moves[movesIndex].playerNo = 1;
+                moves[movesIndex].postScore = player1.score;
+                movesIndex++;
+                grid[height - colsVolume[input] - 1][input].player = 1;
+                grid[height - colsVolume[input] - 1][input].value = player1.symbol;
+                grid[height - colsVolume[input] - 1][input].color = player1.color;
+                colsVolume[input]++;
+                player1.moves = player1.moves + 1;
+                printf("%d", player1.moves);
+                if (player1.moves >= 4) {
+                    ScoreCalc(player1, moves, grid, movesIndex - 1, height, width, colsVolume);
+                }
+            }
+            else {
+                moves[movesIndex].playerNo = 2;
+                moves[movesIndex].postScore = player2.score;
+                movesIndex++;
+                grid[height - colsVolume[input] - 1][input].player = 2;
+                grid[height - colsVolume[input] - 1][input].value = player2.symbol;
+                grid[height - colsVolume[input] - 1][input].color = player2.color;
+                colsVolume[input]++;
+                player2.moves = player2.moves + 1;
+                printf("%d", player2.moves);
+                if (player2.moves >= 4) {
+                    ScoreCalc(player1, moves, grid, movesIndex - 1, height, width, colsVolume);
+                }
+            }
+            plays++;
+            printGrid(grid, height, width, player1, player2, initialTime);
+            //check for game end
+            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
         }
     }
     
 }
 
-void player2move(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex) {
+/*void player2move(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex, time_t initialTime) {
     printf("\nPlayer 2's turn..\n");
     int input = validateMove(width);
     if (input == -1) {
@@ -203,7 +230,7 @@ void player2move(struct cell grid[100][100], int height, int width, struct playe
     else {
         if (colsVolume[input] >= height) {
             printf("Column is full .. please choose another column\n");
-            player2move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
+            player2move(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime);
         }
         else {
             moves[movesIndex].columnNo = input;
@@ -212,14 +239,17 @@ void player2move(struct cell grid[100][100], int height, int width, struct playe
             grid[height - colsVolume[input] - 1][input].player = 2;
             grid[height - colsVolume[input] - 1][input].value = player2.symbol;
             grid[height - colsVolume[input] - 1][input].color = player2.color;
+            player2.moves = player2.moves + 1;
+            printf("%d", player2.moves);
             colsVolume[input]++;
-            if (player1.moves >= 4)
-            ScoreCalc(player2, moves, grid, movesIndex, height, width, colsVolume);
+            if (player2.moves >= 4)
+            ScoreCalc(player2, moves, grid, movesIndex-1, height, width, colsVolume);
+            printGrid(grid, height, width, player1, player2, initialTime);
 
         }
     }
 
-}
+}*/
 
 void newGame(struct config config) {
     
@@ -265,20 +295,6 @@ void newGame(struct config config) {
     printGrid(grid, height, width, player1, player2, initialTime);
     int plays = 0;
     int gameEnd = 1;
-    while (gameEnd) {
-        if (plays % 2 == 0) {
-            player1move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
-            printGrid(grid, height, width, player1, player2, initialTime);
-            plays++;
-            // check for game end
-        }
-        else {
-            player2move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
-            printGrid(grid, height, width, player1, player2, initialTime);
-            plays++;
-            // check for game end
-        }
-
-    }
-    
+    playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+     
 }
