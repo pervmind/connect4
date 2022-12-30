@@ -301,6 +301,7 @@ void newGame(struct config config) {
     time(&initialTime);
     int colsVolume[100];
     struct move moves[10000];
+    struct move redos[10000];
     int movesIndex = 0;
     initiateGame(grid, height, width, colsVolume);
     printGrid(grid, height, width, player1, player2, initialTime);
