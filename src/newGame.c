@@ -248,7 +248,7 @@ void player2move(struct cell grid[100][100], int height, int width, struct playe
 
 }
 
-void newGame(struct config config) {
+void newGame(struct config config){
     
     char game_colors[] = { 'R','B','Y','G' }; //all colors possible for players' disks
     printf("\n***************\n");
