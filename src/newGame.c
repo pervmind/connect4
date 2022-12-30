@@ -108,14 +108,11 @@ int ScoreCalc(struct player player, int columnNo, struct cell grid[100][100],int
     }
     return NewScore;
 }
-
-
 void coloredChar(char color, char character ) {
     Color(color); //printing color
     printf("%c", character);
     Color('W'); //reseting color
 }
-
 int validGameMode() {
     char input[256];
     printf("\nSelect The MODE's Number : \n");
@@ -129,7 +126,6 @@ int validGameMode() {
         return validGameMode();
     }
 }
-
 void initiateGame(struct cell grid[100][100], int height, int width, int colsVolume[100]) {
     
     for (int i = 0; i < width; i++) {
@@ -142,7 +138,6 @@ void initiateGame(struct cell grid[100][100], int height, int width, int colsVol
         }
     }
 }
-
 void printGrid(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, time_t initialTime){
     printf("\nPlayer1(score: %d, moves: %d)\nPlayer2(score: %d, moves: %d)\n", player1.score, player1.moves, player2.score, player2.moves);
     time_t currentTime;
@@ -201,7 +196,6 @@ int validateMove(int width) {
     }
     
 }
-
 void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex, time_t initialTime, int plays){
     if (plays % 2 == 0) {
         printf("\nPlayer 1's turn..\n");
@@ -298,8 +292,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     }
     
 }
-
-void newGame(struct config config){
+void newGame(struct config config) {
     
     char game_colors[] = { 'R','B','Y','G' }; //all colors possible for players' disks
     printf("\n***************\n");
