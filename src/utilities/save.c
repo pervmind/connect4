@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../../headers/newGame.h"
+#include "../../headers/mainMenu.h"
+#include "../../headers/config.h"
 
 
 int validateSlot() {
@@ -32,7 +34,7 @@ void save(struct cell grid[100][100], struct player player1, struct player playe
 		fp = fopen("save3.bin", "wb");
 	}
 	
-	char content[10010];
+	char content[10020];
 	content[0] = mode;
 	content[1] = turn;
 	content[2] = player1.color;
@@ -41,11 +43,11 @@ void save(struct cell grid[100][100], struct player player1, struct player playe
 	content[5] = player1.symbol;
 	content[6] = player2.color;
 	content[7] = player2.moves;
-	content[4] = player2.score;
-	content[5] = player2.symbol;
-	content[6] = width;
-	content[7] = height;
-	int index = 8;
+	content[8] = player2.score;
+	content[9] = player2.symbol;
+	content[10] = width;
+	content[11] = height;
+	int index = 12;
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			content[index++] = grid[i][j].player;
@@ -54,4 +56,6 @@ void save(struct cell grid[100][100], struct player player1, struct player playe
 	content[index] = '\0';
 	fwrite(content, sizeof(content), 1, fp);
 	fclose(fp);
+	printf("Progress saved !! \nReturning to Main Menu.. \n");
+	mainMenu(getConfig());
 }
