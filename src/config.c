@@ -6,7 +6,7 @@
 
 struct config getConfig() {
 	struct config config;
-	FILE* fp;
+	FILE *fp;
 	char path[256], content[2048];
 	int failTimes = 0, def = 0;
 	printf("Enter path for config xml file : ");

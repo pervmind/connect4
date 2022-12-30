@@ -4,6 +4,7 @@
 #include <time.h>
 #include "../headers/config.h"
 #include "../headers/newGame.h"
+#include "../headers/save.h"
 
 
 
@@ -196,7 +197,7 @@ int validateMove(int width) {
     }
     
 }
-void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex, time_t initialTime, int plays){
+void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex, time_t initialTime, int plays, char mode){
     if (plays % 2 == 0) {
         printf("\nPlayer 1's turn..\n");
     }
@@ -206,6 +207,14 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     int input = validateMove(width);
     if (input == -1) {
         printf("save game\n"); //we need functions here !!!!!!!!!!!!!!
+        char turn;
+        if (plays % 2 == 0) {
+            turn = 1;
+        }
+        else {
+            turn = 2;
+        }
+        save(grid, player1, player2, turn, mode, width, height);
     }
     else if (input == -2) {
         printf("undo");
@@ -224,7 +233,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             colsVolume[lastcol]--;
             //continue
             plays++;
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, mode);
 
         }
         else {
@@ -241,7 +250,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             colsVolume[lastcol]--;
             //continue
             plays++;
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, mode);
         }
     }
     else if (input == -3) {
@@ -253,7 +262,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     else {
         if (colsVolume[input] >= height) {
             printf("Column is full .. please choose another column\n");
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, mode);
         }
         else {
             if (plays % 2 == 0) {
@@ -289,7 +298,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             plays++;
             printGrid(grid, height, width, player1, player2, initialTime);
             //check for game end
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, mode);
         }
     }
     
@@ -301,7 +310,7 @@ void newGame(struct config config) {
     printf("\nPlease Select GAME MODE :");
     printf("\n1 : Player 1 V.S PC");
     printf("\n2 : Player 2 V.S Player 2");
-    int md = validGameMode();
+    char md = validGameMode();
     int C1, C2; // player 1 , 2 disks colors
     time_t t;
     srand((unsigned)time(&t)); // generating random numbers using time
@@ -387,6 +396,6 @@ void newGame(struct config config) {
         }
 
     }*/
-    playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+    playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, md);
      
 }
