@@ -200,9 +200,8 @@ int validateMove(int width) {
 int undoTimes = 0;
 int redoTimes = 0;
 int lastcol   = 0;
-void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], struct move redos[10000], int movesIndex, time_t initialTime, int plays) {
 
-void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex, time_t initialTime, int plays, char mode){
+void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], struct move redos[10000], int movesIndex, time_t initialTime, int plays, char mode){
     if (plays % 2 == 0) {
         printf("\nPlayer 1's turn..\n");
     }
@@ -244,9 +243,8 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             colsVolume[lastcol]--;
             undoTimes++;
             //continue
-            playermove(grid, height, width, player1, player2, colsVolume, moves,redos,movesIndex, initialTime, plays);
             plays++;
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, mode);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
 
         }
         else if(plays % 2 == 0 && plays > 0) {
@@ -268,7 +266,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             if(colsVolume > 0)
             colsVolume[lastcol]--;
             //continue
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode);
             undoTimes++;
         }
         else {
@@ -276,9 +274,8 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             printf("\n| You cannot undo if The board is empty ! |\n");
             printf("-------------------------------------------");
             printGrid(grid, height, width, player1, player2, initialTime);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays);
             plays++;
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, mode);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
         }
     }
     //********************************************      REDO     ************************************//
@@ -293,7 +290,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             player1.moves++;
             colsVolume[lastcol]++;
             printGrid(grid, height, width, player1, player2, initialTime);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
             redoTimes++;
         }
         else if (plays % 2 != 0 && undoTimes != 0 && undoTimes > redoTimes) {
@@ -305,7 +302,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             player2.moves++;
             colsVolume[lastcol]++;
             printGrid(grid, height, width, player1, player2, initialTime);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
             redoTimes++;
         }
         else {
@@ -313,7 +310,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             printf("\n| You can Redo if the game not undoed enough ! |\n");
             printf("-----------------------------------------------");
             printGrid(grid, height, width, player1, player2, initialTime);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
         }
         //update score
         //moves++
@@ -323,8 +320,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     else {
         if (colsVolume[input] >= height) {
             printf("Column is full .. please choose another column\n");
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, mode);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode);
         }
         else {
             if (plays % 2 == 0) {
@@ -358,8 +354,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             plays++;
             printGrid(grid, height, width, player1, player2, initialTime);
             //check for game end
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, mode);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode);
         }
     }
     
@@ -458,7 +453,6 @@ void newGame(struct config config) {
         }
 
     }*/
-    playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays);
-    playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, md);
+    playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, md);
      
 }

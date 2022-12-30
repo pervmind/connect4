@@ -71,11 +71,12 @@ void loadGame() {
 	time_t initialTime;
 	time(&initialTime);
 	struct move moves[10000];
+	struct move redos[10000];
 	int movesIndex = 0;
 	printGrid(grid, height, width, player1, player2, initialTime);
 	int plays = 0;
 	if (turn == 2) {
 		plays = 1;
 	}
-	playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays, mode);
+	playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode);
 }
