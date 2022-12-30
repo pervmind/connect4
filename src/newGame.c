@@ -248,7 +248,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
                 colsVolume[input]++;
                 player2.moves = player2.moves + 1;
                 if (player2.moves >= 4) {
-                    player2.score = ScoreCalc(player1, input, grid, movesIndex - 1, height, width, colsVolume);
+                    player2.score = ScoreCalc(player2, input, grid, movesIndex - 1, height, width, colsVolume);
                 }
             }
             plays++;
