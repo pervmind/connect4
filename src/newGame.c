@@ -45,15 +45,15 @@ int endVal(int end , int limit) {
     else
         return limit;
 }
-int ScoreCalc(struct player player,struct move move[10000], struct cell grid[100][100],int index, int hight, int width, int colsVolume[100]) {
+int ScoreCalc(struct player player, int columnNo, struct cell grid[100][100],int index, int hight, int width, int colsVolume[100]) {
     int NewScore = player.score;
     //row scorecheck
     int count = 0;
-    int start = move[index].columnNo - 3 ;
-    int end   = move[index].columnNo + 3 ;
+    int start = columnNo - 3 ;
+    int end   = columnNo + 3 ;
     start = startVal(start);
     end = endVal(end, width);
-    int vol = colsVolume[move[index].columnNo];
+    int vol = colsVolume[columnNo];
     for (int i = start; i <= end; i++) {
         if (grid[hight - vol][i].value == player.symbol)
             count++;
@@ -64,12 +64,12 @@ int ScoreCalc(struct player player,struct move move[10000], struct cell grid[100
     }
     //col scorecheck
     count = 0;
-    start = hight - colsVolume[move[index].columnNo] - 3;
-    end   = hight - colsVolume[move[index].columnNo] + 3;
+    start = hight - colsVolume[columnNo] - 3;
+    end   = hight - colsVolume[columnNo] + 3;
     start = startVal(start);
     end = endVal(end, hight);
     for (int i = start; i <= end; i++) {
-         if (grid[i][move[index].columnNo].value == player.symbol)
+         if (grid[i][columnNo].value == player.symbol)
              count++;
          else
              count = 0;
@@ -77,10 +77,10 @@ int ScoreCalc(struct player player,struct move move[10000], struct cell grid[100
              NewScore++;
     }
     //first diagonalcheck '/'
-    int colstart = move[index].columnNo - 3;
-    int rowstart = hight - colsVolume[move[index].columnNo] + 3;
-    int colend   = move[index].columnNo + 3;
-    int rowend   = hight - colsVolume[move[index].columnNo] - 3;
+    int colstart = columnNo - 3;
+    int rowstart = hight - colsVolume[columnNo] + 3;
+    int colend   = columnNo + 3;
+    int rowend   = hight - colsVolume[columnNo] - 3;
     int j = rowstart;
     for (int i = colstart; i <= colend; i++) {
         if (grid[j][i].value == player.symbol)
@@ -92,10 +92,10 @@ int ScoreCalc(struct player player,struct move move[10000], struct cell grid[100
         j--;
     }
     //second diagonalcheck '\'
-     colstart = move[index].columnNo - 3;
-     rowstart = hight - colsVolume[move[index].columnNo] - 3;
-     colend = move[index].columnNo + 3;
-     rowend = hight - colsVolume[move[index].columnNo] + 3;
+     colstart = columnNo - 3;
+     rowstart = hight - colsVolume[columnNo] - 3;
+     colend = columnNo + 3;
+     rowend = hight - colsVolume[columnNo] + 3;
      j = rowstart;
     for (int i = colstart; i <= colend; i++) {
         if (grid[j][i].value == player.symbol)
@@ -177,7 +177,7 @@ void printGrid(struct cell grid[100][100], int height, int width, struct player 
     }
 }
 int validateMove(int width) {
-    printf("Enter a column number (type q to save and exit): ");
+    printf("Enter a column number (type q to save and exit, u to undo, r to redo): ");
     char str[100];
     fgets(str, 99, stdin);
     int input = atoi(str);
@@ -187,6 +187,12 @@ int validateMove(int width) {
     else {
         if (str[0] == 'q') {
             return -1;
+        }
+        else if (str[0] == 'u') {
+            return -2;
+        }
+        else if (str[0] == 'r') {
+            return -3;
         }
         else {
             printf("invalid input!!\n");
@@ -207,21 +213,18 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     if (input == -1) {
         printf("save game\n");
     }
+    else if (input == -2) {
+        printf("undo");
+    }
+    else if (input == -3) {
+        printf("redo");
+    }
     else {
         if (colsVolume[input] >= height) {
             printf("Column is full .. please choose another column\n");
             playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
         }
         else {
-            moves[movesIndex].columnNo = input;
-            moves[movesIndex].playerNo = 1;
-            moves[movesIndex].postScore = player1.score;
-            movesIndex++;
-            grid[height - colsVolume[input] - 1][input].player = 1;
-            grid[height - colsVolume[input] - 1][input].value = player1.symbol;
-            grid[height - colsVolume[input] - 1][input].color = player1.color;
-            colsVolume[input]++;
-
             if (plays % 2 == 0) {
                 moves[movesIndex].playerNo = 1;
                 moves[movesIndex].postScore = player1.score;
@@ -231,9 +234,8 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
                 grid[height - colsVolume[input] - 1][input].color = player1.color;
                 colsVolume[input]++;
                 player1.moves = player1.moves + 1;
-                printf("%d", player1.moves);
                 if (player1.moves >= 4) {
-                    ScoreCalc(player1, moves, grid, movesIndex - 1, height, width, colsVolume);
+                    player1.score = ScoreCalc(player1, input, grid, movesIndex - 1, height, width, colsVolume);
                 }
             }
             else {
@@ -245,9 +247,8 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
                 grid[height - colsVolume[input] - 1][input].color = player2.color;
                 colsVolume[input]++;
                 player2.moves = player2.moves + 1;
-                printf("%d", player2.moves);
                 if (player2.moves >= 4) {
-                    ScoreCalc(player1, moves, grid, movesIndex - 1, height, width, colsVolume);
+                    player2.score = ScoreCalc(player1, input, grid, movesIndex - 1, height, width, colsVolume);
                 }
             }
             plays++;
@@ -258,37 +259,6 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     }
     
 }
-
-/*void player2move(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex, time_t initialTime) {
-    printf("\nPlayer 2's turn..\n");
-    int input = validateMove(width);
-    if (input == -1) {
-        printf("save game\n");
-    }
-    else {
-        if (colsVolume[input] >= height) {
-            printf("Column is full .. please choose another column\n");
-            player2move(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime);
-        }
-        else {
-            moves[movesIndex].columnNo = input;
-            moves[movesIndex].playerNo = 2;
-            moves[movesIndex].postScore = player2.score;
-            grid[height - colsVolume[input] - 1][input].player = 2;
-            grid[height - colsVolume[input] - 1][input].value = player2.symbol;
-            grid[height - colsVolume[input] - 1][input].color = player2.color;
-            player2.moves = player2.moves + 1;
-            printf("%d", player2.moves);
-            colsVolume[input]++;
-            ScoreCalc(player2, moves, grid, movesIndex, height, width, colsVolume);
-            if (player2.moves >= 4)
-            ScoreCalc(player2, moves, grid, movesIndex-1, height, width, colsVolume);
-            printGrid(grid, height, width, player1, player2, initialTime);
-
-        }
-    }
-
-}*/
 
 void newGame(struct config config) {
     
@@ -333,8 +303,7 @@ void newGame(struct config config) {
     initiateGame(grid, height, width, colsVolume);
     printGrid(grid, height, width, player1, player2, initialTime);
     int plays = 0;
-    int gameEnd = 1;
-    while (gameEnd) {
+    /*while (gameEnd) {
         if (plays % 2 == 0) {
             player1move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
             player1.moves++;
@@ -383,7 +352,7 @@ void newGame(struct config config) {
             }
         }
 
-    }
+    }*/
     playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
      
 }
