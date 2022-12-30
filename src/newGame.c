@@ -196,7 +196,7 @@ int validateMove(int width) {
     }
     
 }
-void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], int movesIndex, time_t initialTime, int plays){
+void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], struct move redos[10000], int movesIndex, time_t initialTime, int plays) {
     if (plays % 2 == 0) {
         printf("\nPlayer 1's turn..\n");
     }
@@ -209,39 +209,44 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     }
     else if (input == -2) {
         printf("undo");
-        printf("\n%d", plays);
         if (plays % 2 != 0) {
+            plays--;
+            movesIndex--;
             //update score
-            player1.score = moves[movesIndex - 1].postScore;
+            player1.score = moves[plays].postScore;
             //moves++
+            if(player1.moves > 0)
             player1.moves--;
             //update grid
-            int lastcol = moves[movesIndex-1].columnNo;
-            printf("\n%d",lastcol);
-            grid[height-colsVolume[lastcol]-1][lastcol].value = ' ';
+            int lastcol = moves[plays].columnNo;
+            grid[height - colsVolume[lastcol]][lastcol].value = ' ';
+            grid[height - colsVolume[lastcol]][lastcol].player = 0;
             printGrid(grid, height, width, player1, player2, initialTime);
             //update columnvolume
+            if (colsVolume > 0)
             colsVolume[lastcol]--;
             //continue
-            plays++;
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves,redos,movesIndex, initialTime, plays);
 
         }
         else {
+            plays--;
+            movesIndex--;
             //update score
-            player2.score = moves[movesIndex - 1].postScore;
+            player2.score = moves[plays].postScore;
             //moves++
+            if (player2.moves > 0)
             player2.moves--;
             //update grid
-            int lastcol = 0;
-            printf("\n%d", lastcol);
+            int lastcol = moves[plays].columnNo;
             grid[height - colsVolume[lastcol]][lastcol].value = ' ';
+            grid[height - colsVolume[lastcol]][lastcol].player = 0;
             printGrid(grid, height, width, player1, player2, initialTime);
             //update columnvolume
+            if(colsVolume > 0)
             colsVolume[lastcol]--;
             //continue
-            plays++;
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays);
         }
     }
     else if (input == -3) {
@@ -253,14 +258,13 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     else {
         if (colsVolume[input] >= height) {
             printf("Column is full .. please choose another column\n");
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays);
         }
         else {
             if (plays % 2 == 0) {
                 moves[movesIndex].playerNo = 1;
                 moves[movesIndex].postScore = player1.score;
                 moves[movesIndex].columnNo = input;
-                printf("\n %d\n", moves[movesIndex].columnNo);
                 movesIndex++;
                 grid[height - colsVolume[input] - 1][input].player = 1;
                 grid[height - colsVolume[input] - 1][input].value = player1.symbol;
@@ -275,7 +279,6 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
                 moves[movesIndex].playerNo = 2;
                 moves[movesIndex].postScore = player2.score;
                 moves[movesIndex].columnNo = input;
-                printf("\n %d\n", moves[movesIndex].columnNo);
                 movesIndex++;
                 grid[height - colsVolume[input] - 1][input].player = 2;
                 grid[height - colsVolume[input] - 1][input].value = player2.symbol;
@@ -289,7 +292,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             plays++;
             printGrid(grid, height, width, player1, player2, initialTime);
             //check for game end
-            playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays);
         }
     }
     
@@ -333,6 +336,7 @@ void newGame(struct config config) {
     time(&initialTime);
     int colsVolume[100];
     struct move moves[10000];
+    struct move redos[10000];
     int movesIndex = 0;
     initiateGame(grid, height, width, colsVolume);
     printGrid(grid, height, width, player1, player2, initialTime);
@@ -387,6 +391,6 @@ void newGame(struct config config) {
         }
 
     }*/
-    playermove(grid, height, width, player1, player2, colsVolume, moves, movesIndex, initialTime, plays);
+    playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays);
      
 }
