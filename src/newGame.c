@@ -197,10 +197,8 @@ int validateMove(int width) {
     }
     
 }
-int undoTimes = 0;
-int lastcol   = 0;
 
-void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], struct move redos[10000], int movesIndex, time_t initialTime, int plays, char mode){
+void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], struct move redos[10000], int movesIndex, time_t initialTime, int plays, char mode, int redosIndex, int undoTimes){
     if (plays % 2 == 0) {
         printf("\nPlayer 1's turn..\n");
     }
@@ -209,7 +207,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     }
     int input = validateMove(width);
     if (input == -1) {
-        printf("save game\n"); //we need functions here !!!!!!!!!!!!!!
+        printf("save game\n"); 
         char turn;
         if (plays % 2 == 0) {
             turn = 1;
@@ -221,106 +219,109 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
     }
     else if (input == -2) {
         printf("undo");
-        //********************************************      UNDO     ************************************//
-        if (plays % 2 != 0 && plays > 0) {
-            redos[plays].postScore = player1.score; //initiating for REDO
+        if (plays % 2 != 0 && movesIndex > 0) {
+            redos[redosIndex].postScore = player1.score; //initiating for REDO
             plays--;
             movesIndex--;
             //update score
-            player1.score = moves[plays].postScore;
+            player1.score = moves[movesIndex].postScore;
             //moves++
-            if(player1.moves > 0)
+                //if (player1.moves > 0)
             player1.moves--;
             //update grid
-            lastcol = moves[plays].columnNo;
-            redos[plays + 1].columnNo = lastcol; //initiating for REDO
+            int lastcol = moves[movesIndex].columnNo;
+            redos[redosIndex].columnNo = lastcol; //initiating for REDO
             grid[height - colsVolume[lastcol]][lastcol].value = ' ';
             grid[height - colsVolume[lastcol]][lastcol].player = 0;
-            printGrid(grid, height, width, player1, player2, initialTime);
             //update columnvolume
-            if (colsVolume > 0)
+                //if (colsVolume > 0)
             colsVolume[lastcol]--;
             undoTimes++;
+            redosIndex++;
             //continue
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
 
         }
-        else if(plays % 2 == 0 && plays > 0) {
-            redos[plays].postScore = player2.score; //initiating for REDO
+        else if (plays % 2 == 0 && movesIndex > 0) {
+            redos[redosIndex].postScore = player2.score; //initiating for REDO
             plays--;
             movesIndex--;
             //update score
-            player2.score = moves[plays].postScore;
+            player2.score = moves[movesIndex].postScore;
             //moves++
-            if (player2.moves > 0)
+                //if (player2.moves > 0)
             player2.moves--;
             //update grid
-            lastcol = moves[plays].columnNo;
-            redos[plays + 1].columnNo = lastcol; //initiating for REDO
+            int lastcol = moves[movesIndex].columnNo;
+            redos[redosIndex].columnNo = lastcol; //initiating for REDO
             grid[height - colsVolume[lastcol]][lastcol].value = ' ';
             grid[height - colsVolume[lastcol]][lastcol].player = 0;
-            printGrid(grid, height, width, player1, player2, initialTime);
             //update columnvolume
-            if(colsVolume > 0)
+                //if (colsVolume > 0)
             colsVolume[lastcol]--;
             undoTimes++;
+            redosIndex++;
             //continue
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode);
         }
         else {
             printf("\n-------------------------------------------");
-            printf("\n| You cannot undo if The board is empty ! |\n");
+            printf("\n| You cannot undo .. No Undos saved      ! |\n");
             printf("-------------------------------------------");
-            printGrid(grid, height, width, player1, player2, initialTime);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
         }
+        printGrid(grid, height, width, player1, player2, initialTime);
+        playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
     }
-    //********************************************      REDO     ************************************//
     else if (input == -3) {
         printf("redo");
         if (plays % 2 == 0 && undoTimes > 0){
             plays++;
-            player1.score = redos[plays].postScore;
-            lastcol = redos[plays].columnNo;
+            int lastcol = redos[redosIndex -1].columnNo;
+            moves[movesIndex].columnNo = lastcol;
+            moves[movesIndex].playerNo = 1;
+            moves[movesIndex].postScore = player1.score;
+            player1.score = redos[redosIndex - 1].postScore;
             grid[height - colsVolume[lastcol] - 1][lastcol].value = player1.symbol;
             grid[height - colsVolume[lastcol] - 1][lastcol].player = 1;
+            grid[height - colsVolume[lastcol] - 1][lastcol].color = player1.color;
             player1.moves++;
             colsVolume[lastcol]++;
             undoTimes--;
-            printGrid(grid, height, width, player1, player2, initialTime);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
+            redosIndex--;
+            movesIndex++;
         }
         else if (plays % 2 != 0 && undoTimes > 0) {
             plays++;
-            player2.score = redos[plays].postScore;
-            lastcol = redos[plays].columnNo;
+            int lastcol = redos[redosIndex - 1].columnNo;
+            moves[movesIndex].columnNo = lastcol;
+            moves[movesIndex].playerNo = 2;
+            moves[movesIndex].postScore = player2.score;
+            player2.score = redos[redosIndex - 1].postScore;
             grid[height - colsVolume[lastcol] - 1][lastcol].value = player2.symbol;
             grid[height - colsVolume[lastcol] - 1][lastcol].player = 2;
+            grid[height - colsVolume[lastcol] - 1][lastcol].color = player2.color;
             player2.moves++;
             colsVolume[lastcol]++;
             undoTimes--;
-            printGrid(grid, height, width, player1, player2, initialTime);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
+            redosIndex--;
+            movesIndex++;
         }
         else {
             printf("\n-----------------------------------------------");
-            printf("\n| You can Redo if the game not undoed enough ! |\n");
+            printf("\n| You cannot Redo, you haven't not undoed enough ! |\n");
             printf("-----------------------------------------------");
-            printGrid(grid, height, width, player1, player2, initialTime);
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode);
+            
         }
-        //update score
-        //moves++
-        //grid print
-        //****************************************      END     ************************************//
+        printGrid(grid, height, width, player1, player2, initialTime);
+        playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
+        
     }
     else {
         if (colsVolume[input] >= height) {
             printf("Column is full .. please choose another column\n");
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
         }
         else {
             undoTimes = 0;
+            redosIndex = 0;
             if (plays % 2 == 0) {
                 moves[movesIndex].playerNo = 1;
                 moves[movesIndex].postScore = player1.score;
@@ -352,7 +353,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             plays++;
             printGrid(grid, height, width, player1, player2, initialTime);
             //check for game end
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode);
+            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
         }
     }
     
@@ -398,6 +399,8 @@ void newGame(struct config config) {
     struct move moves[10000];
     struct move redos[10000];
     int movesIndex = 0;
+    int redosIndex = 0;
+    int undoTimes = 0;
     initiateGame(grid, height, width, colsVolume);
     printGrid(grid, height, width, player1, player2, initialTime);
     int plays = 0;
@@ -451,6 +454,6 @@ void newGame(struct config config) {
         }
 
     }*/
-    playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, md);
+    playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, md, redosIndex, undoTimes);
      
 }

@@ -9,7 +9,7 @@ struct config getConfig() {
 	FILE *fp;
 	char path[256], content[2048];
 	int failTimes = 0, def = 0;
-	printf("Enter path for config xml file : ");
+	printf("Enter path for config xml file : \n");
 	while (1) {
 		gets(path);
 		fp = fopen(path, "r");

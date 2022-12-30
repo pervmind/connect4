@@ -20,20 +20,28 @@ char validateLoad() {
 void loadGame() {
 
 	FILE *fp = NULL;
-	char choice = validateLoad();
-	if (choice == 1) {
-		fp = fopen("save1.bin", "rb");
+	
+	int flag = 1;
+	while (flag) {
+		char choice = validateLoad();
+		if (choice == 1) {
+			fp = fopen("save1.bin", "rb");
+		}
+		else if (choice == 2) {
+			fp = fopen("save2.bin", "rb");
+		}
+		else {
+			fp = fopen("save3.bin", "rb");
+		}
+		if (fp == NULL) {
+			printf("Save slot is empty .. choose another slot!!\n");
+			
+		}
+		else {
+			flag = 0;
+		}
 	}
-	else if (choice == 2) {
-		fp = fopen("save2.bin", "rb");
-	}
-	else{
-		fp = fopen("save3.bin", "rb");
-	}
-	if (fp == NULL) {
-		printf("Save slot is empty .. choose another slot!!\n");
-		loadGame();
-	}
+	
 	char info[10021];
 	fread(info, sizeof(info), 1, fp);
 	fclose(fp);
@@ -73,10 +81,12 @@ void loadGame() {
 	struct move moves[10000];
 	struct move redos[10000];
 	int movesIndex = 0;
+	int redosIndex = 0;
+	int undoTimes = 0;
 	printGrid(grid, height, width, player1, player2, initialTime);
 	int plays = 0;
 	if (turn == 2) {
 		plays = 1;
 	}
-	playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode);
+	playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
 }
