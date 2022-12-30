@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../../headers/newGame.h"
+
 int validateSlot() {
 	printf("Choose saving slot !! \n1.save1\n2.save2\n3.save3\n");
 	int choice;
-	scanf("%d", &choice);
+	scanf_s("%d", &choice);
 	if (choice >= 1 && choice <= 3) {
 		return choice;
 	}
@@ -16,7 +17,7 @@ int validateSlot() {
 
 }
 void save(struct cell grid, struct player player1, struct player player2, char turn, int mode) {
-	FILE* fp;
+	FILE* fp = NULL;
 	int choice = validateSlot();
 	switch (choice) {
 	case 1:
@@ -48,7 +49,6 @@ void save(struct cell grid, struct player player1, struct player player2, char t
 		content[5] = player1.symbol;
 		content[6] = player2.color;
 		content[7] = player2.moves;
-		content[8] = player2.
 
 	}
 }
