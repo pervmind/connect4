@@ -233,7 +233,6 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             if (colsVolume > 0)
             colsVolume[lastcol]--;
             undoTimes++;
-            printf("\n%d\n%d\n%d", undoTimes,plays,redoTimes);
             //continue
             playermove(grid, height, width, player1, player2, colsVolume, moves,redos,movesIndex, initialTime, plays);
         }
