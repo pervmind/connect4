@@ -24,12 +24,24 @@
     <ClCompile Include="src\config.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\newGame.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utilities\save.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\mainMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\newGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\save.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
