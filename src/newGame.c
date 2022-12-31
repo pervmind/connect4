@@ -224,7 +224,7 @@ void winner(int score1, int score2, int highscores, char mode) {
             mainMenu(getConfig());
         }
         printf("Player 2 is the winner !!!\nPlease Enter your name:\n");
-        fgets(winner, 49, stdin);
+        scanf(winner, 49, stdin);
         scanf("%s", winner);
         score = score2;
     }
