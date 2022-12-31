@@ -51,7 +51,8 @@ void loadGame() {
 	struct player player2 = { .color = info[6], .moves = info[7], .no = 2, .score = info[8], .symbol = info[9] };
 	int width = (int)info[10];
 	int height = (int)info[11];
-	int index = 12;
+	int highscores = (int)info[12];
+	int index = 13;
 	struct cell grid[100][100];
 	int colsVolume[100];
 	for (int i = 0; i < width; i++) {
@@ -88,5 +89,5 @@ void loadGame() {
 	if (turn == 2) {
 		plays = 1;
 	}
-	playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
+	playermove(grid, height, width, highscores, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
 }

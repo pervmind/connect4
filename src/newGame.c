@@ -259,7 +259,7 @@ void playermove(struct cell grid[100][100], int height, int width, int highscore
         else {
             turn = 2;
         }
-        save(grid, player1, player2, turn, mode, width, height);
+        save(grid, player1, player2, turn, mode, width, height, highscores);
     }
     else if (input == -2) {
         printf("undo");
