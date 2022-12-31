@@ -442,7 +442,7 @@ void newGame(struct config config) {
     printf("\n***************\n");
     printf("\nPlease Select GAME MODE :");
     printf("\n1 : Player 1 V.S PC");
-    printf("\n2 : Player 2 V.S Player 2");
+    printf("\n2 : Player 1 V.S Player 2");
     char md = validGameMode();
     int C1, C2; // player 1 , 2 disks colors
     time_t t;
