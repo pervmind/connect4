@@ -1,4 +1,5 @@
 #pragma once
+#include "config.h"
 #define KRED  "\x1B[31m"
 #define KGRN  "\x1B[32m"
 #define KYEL  "\x1B[33m"
@@ -25,6 +26,6 @@ struct move {
 	int columnNo;
 };
 
-void newGame();
+void newGame(struct config config);
 void printGrid(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, time_t initialTime);
 void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], struct move redos[10000], int movesIndex, time_t initialTime, int plays, char mode, int redosIndex, int undoTimes);

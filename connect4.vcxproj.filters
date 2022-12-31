@@ -30,6 +30,12 @@
     <ClCompile Include="src\utilities\save.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\loadGame.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\highscores.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\config.h">
@@ -42,6 +48,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\save.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\loadGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\highscores.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

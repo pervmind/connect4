@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_DEPRECATE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,6 +6,8 @@
 #include "../headers/config.h"
 #include "../headers/newGame.h"
 #include "../headers/save.h"
+#include "../headers/highscores.h"
+#include "../headers/mainMenu.h"
 
 
 int ai(int width) {
@@ -199,7 +202,40 @@ int validateMove(int width) {
     }
     
 }
-void playermove(struct cell grid[100][100], int height, int width, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], struct move redos[10000], int movesIndex, time_t initialTime, int plays, char mode, int redosIndex, int undoTimes){
+int endCheck(int width, int height, int colsVolume[100]) {
+    for (int i = 0; i < width; i++) {
+        if (colsVolume[i] < height) {
+            return 0;
+        }
+    }
+    return 1;
+}
+void winner(int score1, int score2, int highscores, char mode) {
+    char winner[100];
+    int score;
+    if (score1 > score2) {
+        printf("Player 1 is the winner !!!\nPlease Enter your name:\n");
+        scanf("%s", winner);
+        score = score1;
+    }
+    else if (score2 > score1) {
+        if(mode == 1){
+            printf("You Lose.. Heading to Main Menu!!");
+            mainMenu(getConfig());
+        }
+        printf("Player 2 is the winner !!!\nPlease Enter your name:\n");
+        fgets(winner, 49, stdin);
+        scanf("%s", winner);
+        score = score2;
+    }
+    else {
+        printf("The game is Tie !!!\nPlease Enter a name\n");
+        scanf("%s", winner);
+        score = score1;
+    }
+    addHighscore(winner, score, highscores);
+}
+void playermove(struct cell grid[100][100], int height, int width, int highscores, struct player player1, struct player player2, int colsVolume[100], struct move moves[10000], struct move redos[10000], int movesIndex, time_t initialTime, int plays, char mode, int redosIndex, int undoTimes){
     if (plays % 2 == 0) {
         printf("\nPlayer 1's turn..\n");
     }
@@ -291,7 +327,7 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             printf("-------------------------------------------");
         }
         printGrid(grid, height, width, player1, player2, initialTime);
-        playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
+        playermove(grid, height, width, highscores, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
     }
     else if (input == -3) {
         printf("redo");
@@ -350,13 +386,13 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             
         }
         printGrid(grid, height, width, player1, player2, initialTime);
-        playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
-        
+        playermove(grid, height, width, highscores, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
+
     }
     else {
         if (colsVolume[input] >= height) {
             printf("Column is full .. please choose another column\n");
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
+            playermove(grid, height, width, highscores, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
         }
         else {
             undoTimes = 0;
@@ -391,8 +427,11 @@ void playermove(struct cell grid[100][100], int height, int width, struct player
             }
             plays++;
             printGrid(grid, height, width, player1, player2, initialTime);
-            //check for game end
-            playermove(grid, height, width, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
+            int end = endCheck(width, height, colsVolume);
+            if (end == 1) {
+                winner(player1.score, player2.score, highscores, mode);
+            }
+            playermove(grid, height, width, highscores, player1, player2, colsVolume, moves, redos, movesIndex, initialTime, plays, mode, redosIndex, undoTimes);
         }
     }
     
@@ -431,6 +470,7 @@ void newGame(struct config config) {
     struct player player2 = { .no = 2, .moves = 0, .symbol = 'O', .score = 0 , .color = game_colors[C2]}; // <---  i added color here
     int height = config.hieght;
     int width = config.width;
+    int highscores = config.highscores;
     struct cell grid[100][100];
     time_t initialTime;
     time(&initialTime);
@@ -443,56 +483,5 @@ void newGame(struct config config) {
     initiateGame(grid, height, width, colsVolume);
     printGrid(grid, height, width, player1, player2, initialTime);
     int plays = 0;
-    /*while (gameEnd) {
-        if (plays % 2 == 0) {
-            player1move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
-            player1.moves++;
-            if (player1.moves >= 4)
-            player1.score = ScoreCalc(player1, moves, grid, movesIndex, height, width, colsVolume);
-            printGrid(grid, height, width, player1, player2, initialTime);
-            plays++;
-            // check for game end
-            if (player1.moves + player2.moves == height * width) {
-                if (player1.score != player2.score) {
-                    printf("\n********************");
-                    printf("\nTHE GMAE HAS ENDED\n");
-                    printf("The Winner is player ");
-                    if (player1.score > player2.score)
-                        printf("1\n");
-                    else
-                        printf("2\n");
-                }
-                else
-                    printf("The Game Ended With A Tie");
-                
-            }
-
-        }
-        else {
-            player2move(grid, height, width, player1, player2, colsVolume, moves, movesIndex);
-            player2.moves++;
-            if(player2.moves >= 4)
-            player2.score = ScoreCalc(player2, moves, grid, movesIndex, height, width, colsVolume);
-            printGrid(grid, height, width, player1, player2, initialTime);
-            plays++;
-            // check for game end
-            if (player1.moves + player2.moves == height * width) {
-                if (player1.score != player2.score) {
-                    printf("\n********************");
-                    printf("\nTHE GMAE HAS ENDED\n");
-                    printf("The Winner is player ");
-                    if (player1.score > player2.score)
-                        printf("1\n");
-                    else
-                        printf("2\n");
-                }
-                else
-                    printf("The Game Ended With A Tie");
-            
-            }
-        }
-
-    }*/
-    playermove(grid, height, width, player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, md, redosIndex, undoTimes);
-     
+    playermove(grid, height, width, highscores,player1, player2, colsVolume, moves, redos,movesIndex, initialTime, plays, md, redosIndex, undoTimes);
 }

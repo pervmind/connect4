@@ -75,7 +75,7 @@ struct config getConfig() {
 		config.highscores = atoi(highscoreValueStr);
 	}
 
-	if ((config.hieght == 0) || (config.width == 0) || (config.highscores == 0)) {
+	if ((config.hieght < 4) || (config.width < 4) || (config.highscores == 0)) {
 		printf("Corrupted File!! Missing Values!!");
 		return getConfig();
 	}

@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\config.c" />
+    <ClCompile Include="src\highscores.c" />
     <ClCompile Include="src\loadGame.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\mainMenu.c">
@@ -140,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\config.h" />
+    <ClInclude Include="headers\highscores.h" />
     <ClInclude Include="headers\loadGame.h" />
     <ClInclude Include="headers\mainMenu.h" />
     <ClInclude Include="headers\newGame.h" />

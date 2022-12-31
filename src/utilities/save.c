@@ -20,7 +20,7 @@ int validateSlot() {
 	}
 
 }
-void save(struct cell grid[100][100], struct player player1, struct player player2, char turn, int mode, int width, int height) {
+void save(struct cell grid[100][100], struct player player1, struct player player2, char turn, int mode, int width, int height, int highscores) {
 	FILE* fp;
 	int choice = validateSlot();
 	if (choice == 1) {
@@ -47,7 +47,8 @@ void save(struct cell grid[100][100], struct player player1, struct player playe
 	content[9] = player2.symbol;
 	content[10] = width;
 	content[11] = height;
-	int index = 12;
+	content[12] = highscores;
+	int index = 13;
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			content[index++] = grid[i][j].player;

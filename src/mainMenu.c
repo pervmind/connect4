@@ -4,6 +4,7 @@
 #include "../headers/config.h"
 #include "../headers/newGame.h"
 #include "../headers/loadGame.h"
+#include "../headers/highscores.h"
 
 int validMode() {
     char input [256];
@@ -38,8 +39,8 @@ void mainMenu(struct config config)
         loadGame();
         break;
      case (3):
-        printf("check3"); // <<<<<<<<<< we need save file here to view highscores
-        break;
+         highscores(config.highscores);
+         break;
      case (4):
          printf("Thank you for playing..");
          exit(0);
