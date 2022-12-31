@@ -24,6 +24,9 @@ void menuOrExit() {
 		printf("Thank you for playing..");
 		exit(0);
 	}
+	else {
+		menuOrExit();
+	}
 }
 void highscores(int highscores) {
 	FILE* fp;
@@ -60,6 +63,5 @@ void highscores(int highscores) {
 		}
 
 	}
-	fclose(fp);
 	menuOrExit();
 }
